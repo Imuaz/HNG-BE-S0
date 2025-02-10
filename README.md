@@ -9,9 +9,9 @@
 ### Setup Instructions
 1. Clone the repository and `cd` into it:
     ```
-    git clone https://github.com/Imuaz/hngbackend.git
+    git clone https://github.com/Imuaz/hngbackend-stage1.git
     
-    cd hngbackend
+    cd hngbackend-stage1
     ```
 2. Create and activate a virtual environment:
     ```
