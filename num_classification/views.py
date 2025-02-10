@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import NumberSerializer
 from django.http import JsonResponse
+from django.core.cache import cache
 
 
 def is_prime(n):
@@ -29,29 +30,35 @@ def is_armstrong(n):
 class ClassifyNumber(APIView):
 
     def get(self, request):
-        number = request.GET.get("number")
+        number = request.GET.get('number')
         if not number or not number.isdigit():
-            return JsonResponse(
-                {"number": number, "error": True}, status=status.HTTP_400_BAD_REQUEST
-            )
+            return JsonResponse({
+                "number": number,
+                "error": True
+            }, status=status.HTTP_400_BAD_REQUEST)
 
         number = int(number)
-        fun_fact_url = f"http://numbersapi.com/{number}/math?json"
-        fun_fact_response = requests.get(fun_fact_url)
+        cache_key = f'fun_fact_{number}'
+        fun_fact = cache.get(cache_key)
+        if not fun_fact:
+            fun_fact_url = f'http://numbersapi.com/{number}/math?json'
+            fun_fact_response = requests.get(fun_fact_url)
 
-        if fun_fact_response.status_code != 200:
-            fun_fact = "Fun fact not found."
-        else:
-            fun_fact_data = fun_fact_response.json()
-            fun_fact = fun_fact_data["text"]
+            if fun_fact_response.status_code != 200:
+                fun_fact = "Fun fact not found."
+            else:
+                fun_fact_data = fun_fact_response.json()
+                fun_fact = fun_fact_data['text']
+            
+            cache.set(cache_key, fun_fact, timeout=60*60)  # Cache the fun fact for 1 hour
 
         properties = []
         if is_armstrong(number):
-            properties.append("armstrong")
+            properties.append('armstrong')
         if number % 2 == 0:
-            properties.append("even")
+            properties.append('even')
         else:
-            properties.append("odd")
+            properties.append('odd')
 
         data = {
             "number": number,
@@ -59,7 +66,7 @@ class ClassifyNumber(APIView):
             "is_perfect": is_perfect(number),
             "properties": properties,
             "digit_sum": sum(int(digit) for digit in str(number)),
-            "fun_fact": fun_fact,
+            "fun_fact": fun_fact
         }
 
         serializer = NumberSerializer(data=data)
