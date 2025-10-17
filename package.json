@@ -1,10 +1,12 @@
 {
   "name": "hng-be-s0",
   "version": "1.0.0",
+  "type": "module",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "test": "node test.js",
+    "dev": "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -18,10 +20,13 @@
   },
   "homepage": "https://github.com/Imuaz/HNG-BE-S0#readme",
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "jest": "^29.0.0",
+    "@types/jest": "^29.0.0"
   },
   "dependencies": {
     "axios": "^1.12.2",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0"
   }
