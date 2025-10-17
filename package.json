@@ -32,6 +32,10 @@
     "express": "^5.1.0"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/__tests__/**/*.test.[jt]s"
+    ]
   }
 }
+ 

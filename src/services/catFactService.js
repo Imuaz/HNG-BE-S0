@@ -26,8 +26,8 @@ async function getCatFact() {
       throw new Error('Invalid response structure from Cat Facts API');
     }
   } catch (error) {
-    // Log the error for debugging
-    console.error('Error fetching cat fact:', error.message);
+  // Log the error for debugging (print full object when message is not available)
+  console.error('Error fetching cat fact:', (error && error.message) ? error.message : error);
 
     // Handle different types of errors and throw structured ApiError
     if (error.code === 'ECONNABORTED') {
